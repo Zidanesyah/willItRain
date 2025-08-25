@@ -114,7 +114,7 @@ npm run dev
 # Server will start at http://localhost:3000
 
 # 5) Open the website
-# Visit http://localhost:3000 and try a city (e.g., Jakarta)
+# Visit http://localhost:5000 and try a city (e.g., Jakarta)
 ```
 
 ---
