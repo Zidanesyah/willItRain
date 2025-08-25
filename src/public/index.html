@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Will it rain tomorrow?</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    form { display: flex; gap: .5rem; margin-bottom: 1rem; }
+    input, button { padding: .6rem .8rem; font-size: 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; }
+    .ok { color: #0a7; } .warn { color: #c53; }
+    .dim { color: #666; font-size: .9rem; }
+    ul { margin: .25rem 0; padding-left: 1.25rem; }
+  </style>
+</head>
+<body>
+  <h1>Will it rain tomorrow?</h1>
+  <p class="dim">Masukkan kota (contoh: Jakarta, Bandung, Singapore)</p>
+
+  <form id="form">
+    <input id="city" placeholder="Type a city..." required />
+    <button>Check</button>
+  </form>
+
+  <div id="result" class="card"></div>
+
+  <script>
+    const $form = document.getElementById('form');
+    const $city = document.getElementById('city');
+    const $result = document.getElementById('result');
+
+    function tsToLocal(dt, tz) {
+      // dt: unix sec UTC, tz: seconds offset from UTC
+      const d = new Date((dt + tz) * 1000);
+      return d.toISOString().replace('T',' ').slice(0,16);
+    }
+
+    $form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const q = $city.value.trim();
+      if (!q) return;
+
+      $result.textContent = 'Loading...';
+
+      try {
+        const res = await fetch(`/api/will-it-rain?q=${encodeURIComponent(q)}&units=metric`);
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Request failed');
+
+        const { location, tomorrow } = json.data;
+        const yesNo = tomorrow.willRain ? 'YES' : 'NO';
+        const cls = tomorrow.willRain ? 'warn' : 'ok';
+
+        const items = (tomorrow.rainySlots || []).slice(0,5)
+          .map(s => `<li>${tsToLocal(s.time, location.timezoneOffsetSec)} — POP: ${Math.round(s.pop*100)}%, Rain: ${s.volume || 0}mm</li>`)
+          .join('');
+
+        $result.innerHTML = `
+          <h2 class="${cls}">${yesNo}</h2>
+          <p><strong>${location.resolved}</strong></p>
+          <p class="dim">Highest POP tomorrow: ${Math.round(tomorrow.highestProbability*100)}%</p>
+          ${items ? `<p>Slots berpotensi hujan:</p><ul>${items}</ul>` : `<p>Tidak ada slot hujan terdeteksi.</p>`}
+        `;
+      } catch (err) {
+        $result.innerHTML = `<p class="warn">Error: ${err.message}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
