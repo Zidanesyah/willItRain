@@ -111,7 +111,7 @@ cp .env.example .env   # if you have an example file, otherwise create manually
 
 # 4) Run the server
 npm run dev
-# Server will start at http://localhost:3000
+# Server will start at http://localhost:5000
 
 # 5) Open the website
 # Visit http://localhost:5000 and try a city (e.g., Jakarta)
@@ -124,7 +124,7 @@ npm run dev
 Create a `.env` file in the project root:
 
 ```
-PORT=3000
+PORT=5000
 OPENWEATHER_API_KEY=YOUR_KEY_HERE
 OPENWEATHER_BASE_URL=https://api.openweathermap.org
 ```
@@ -150,10 +150,10 @@ Start the app:
 
 ```bash
 npm run dev
-# http://localhost:3000
+# http://localhost:5000
 ```
 
-* API base: `http://localhost:3000/api`
+* API base: `http://localhost:5000/api`
 * Web UI: serves from `src/public/index.html` (root path `/`).
 
 ---
@@ -204,10 +204,10 @@ npm run dev
 
 ```bash
 # Success
-curl "http://localhost:3000/api/will-it-rain?q=Jakarta&units=metric"
+curl "http://localhost:5000/api/will-it-rain?q=Jakarta&units=metric"
 
 # Invalid input (short city name)
-curl "http://localhost:3000/api/will-it-rain?q=J"
+curl "http://localhost:5000/api/will-it-rain?q=J"
 ```
 
 ---
