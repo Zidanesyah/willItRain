@@ -214,7 +214,7 @@ curl "http://localhost:3000/api/will-it-rain?q=J"
 
 ## Frontend (Static Website)
 
-* Served from `/` (root). Open `http://localhost:3000`.
+* Served from `/` (root). Open `http://localhost:5000`.
 * Simple form posts to `/api/will-it-rain` and renders **YES/NO** + top 3–5 risky slots (`POP` and rain `mm`).
 
 **Local time conversion** is done client-side by adjusting with `timezoneOffsetSec` from the API.
